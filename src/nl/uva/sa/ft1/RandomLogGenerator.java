@@ -56,7 +56,7 @@ public class RandomLogGenerator extends Thread {
 				String logType = type[randomGenerator.nextInt(type.length)];
 				String logValue = generateRandomNumber().toString();
 				String logLine = logTime +";"+ logLevel +";"+ logType +";"+ logValue;
-				System.out.println(logLine);
+				//System.out.println(logLine);
 				pipe.put(logLine);
 			}
 			//Close the pipe

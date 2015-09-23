@@ -22,8 +22,6 @@ public class LogingFilter extends FilterBase<String, String> implements Filter {
 	//A runnable component that can be run in a Thread or just by calling the function
 	public void run() {
 		//Keep calling the inPipe.get() method while it returns elements
-		//When it throws a PipeClosedException, terminate the counting and presume that the pipe is done
-		//outputting elements
 		try {
 			try {
 				while(true) {

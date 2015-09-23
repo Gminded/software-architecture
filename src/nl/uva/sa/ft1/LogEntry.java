@@ -22,7 +22,7 @@ public class LogEntry {
 		}
 		String [] levels = {"error", "warning", "info", "verbose"};
 		for (int i = 0; i < levels.length; i++) {
-			if (levels[i] == items[1]) {
+			if (levels[i].equals(items[1])) {
 				level = i;
 			}
 		}

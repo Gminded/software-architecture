@@ -25,7 +25,7 @@ public class TypeFilter extends FilterBase<String,String> {
 				while(true) {
 					String s = inPipe.get();
 					LogEntry entry = new LogEntry(s);
-					if (entry.getType() == type) {
+					if (entry.getType().equals(type)) {
 						this.outPipe.put(s);
 					}
 				}
