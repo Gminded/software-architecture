@@ -36,7 +36,7 @@ public class PipeFilterDemo {
     	Thread logGenerator = new RandomLogGenerator(logInPipe);
 
     	//Create log filter and set output pipes
-    	LogingFilter logingFilter = new LogingFilter(logInPipe, logOutPipe);
+    	LogingFilter logingFilter = new LogingFilter(logInPipe, logOutPipe, 0, 1);
     	
     	Pipe<String> logBranchOutPipe1 = new SynchronizedArrayListPipe<>();
     	Pipe<String> logBranchOutPipe2 = new SynchronizedArrayListPipe<>();
