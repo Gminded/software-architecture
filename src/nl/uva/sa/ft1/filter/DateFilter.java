@@ -1,25 +1,24 @@
 package nl.uva.sa.ft1.filter;
 
+import java.util.Date;
+
 import nl.uva.sa.ft1.LogEntry;
 import nl.uva.sa.ft1.pipe.OperationFailedException;
 import nl.uva.sa.ft1.pipe.Pipe;
 import nl.uva.sa.ft1.pipe.PipeClosedException;
 
-//Sample filter that filters out log levels out of specified bounds.
-//It reads log entries from the input pipe.
-public class LogingFilter extends FilterBase<String, String> implements Filter {
-	private Integer lowerBound;
-	private Integer upperBound;
-	
-	//Constructor that takes I/O pipes and bounds to define the log level accepted ranges.
-	//Entries of all other levels are discarded.
-	public LogingFilter(Pipe<String> inPipe, Pipe<String> outPipe, Integer lowerBound, Integer upperBound) {
+// Filter that extracts only log entries in a certain temporal range.
+public class DateFilter extends FilterBase<String,String> {
+	private Date start;
+	private Date end;
+
+	public DateFilter(Pipe<String> inPipe, Pipe<String> outPipe, Date start, Date end) {
 		super(inPipe, outPipe);
-		this.lowerBound = lowerBound;
-		this.upperBound = upperBound;
+		this.start = start;
+		this.end = end;
 	}
 
-	//A runnable component that can be run in a Thread or just by calling the function
+	@Override
 	public void run() {
 		//Keep calling the inPipe.get() method while it returns elements
 		//When it throws a PipeClosedException, terminate the counting and presume that the pipe is done
@@ -29,7 +28,7 @@ public class LogingFilter extends FilterBase<String, String> implements Filter {
 				while(true) {
 					String s = inPipe.get();
 					LogEntry entry = new LogEntry(s);
-					if (lowerBound <= entry.getLevel() && entry.getLevel() <= upperBound) {
+					if (entry.getDate().after(start) && entry.getDate().before(end)) {
 						this.outPipe.put(s);
 					}
 				}
@@ -40,4 +39,5 @@ public class LogingFilter extends FilterBase<String, String> implements Filter {
 			iex.printStackTrace();
 		}
 	}
+
 }
