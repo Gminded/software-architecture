@@ -10,6 +10,7 @@ public class LogEntry {
 	private Integer level;
 	private String type;
 	private Integer value;
+	private String raw;
 	
 	public LogEntry(String entry) {
 		String[] items = entry.split(";");
@@ -28,6 +29,7 @@ public class LogEntry {
 		}
 		type = items[2];
 		value = Integer.parseInt(items[3]);
+		raw = entry;
 	}
 
 	public Date getDate() {
@@ -44,6 +46,10 @@ public class LogEntry {
 	
 	public Integer getValue() {
 		return value;
+	}
+	
+	public String getRaw() {
+		return raw;
 	}
 
 }
