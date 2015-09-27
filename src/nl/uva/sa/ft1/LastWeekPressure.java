@@ -16,7 +16,6 @@ public class LastWeekPressure {
 		Pipe<String> pipe1 = new SynchronizedArrayListPipe<String>();
 		Pipe<String> pipe2 = new SynchronizedArrayListPipe<String>();
 		Pipe<String> pipe3 = new SynchronizedArrayListPipe<String>();
-		Pipe<String> pipe4 = new SynchronizedArrayListPipe<String>();
 		
 		RandomLogGenerator generator = new RandomLogGenerator(pipe1);
 		TypeFilter type = new TypeFilter(pipe1, pipe2, "bloodpressure");
@@ -26,18 +25,15 @@ public class LastWeekPressure {
 		calendar.add(Calendar.DAY_OF_MONTH, -7);
 		Date oneWeekAgo = calendar.getTime();
 		DateFilter date = new DateFilter(pipe2, pipe3, oneWeekAgo, now);
-		AverageFilter average = new AverageFilter(pipe3, pipe4, new Integer[][] {{23,07}, {07,23}});
-		PrintFilter printer = new PrintFilter(pipe4, null);
+		PrintFilter printer = new PrintFilter(pipe3, null);
 		
 		Thread generatorThread = new Thread(generator);
 		Thread typeThread = new Thread(type);
 		Thread dateThread = new Thread(date);
-		Thread averageThread = new Thread(average);
 		Thread printerThread = new Thread(printer);
 		generatorThread.start();
 		typeThread.start();
 		dateThread.start();
-		averageThread.start();
 		printerThread.start();
 	}
 

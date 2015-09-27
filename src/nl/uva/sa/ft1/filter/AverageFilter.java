@@ -46,25 +46,31 @@ public class AverageFilter extends FilterBase<String,String> {
 				while(true) {
 					String s = inPipe.get();
 					LogEntry entry = new LogEntry(s);
-					Calendar calendar = Calendar.getInstance();
-					Integer[] range = hourRanges[index];
-					calendar.setTime(entry.getDate());
-					calendar.set(Calendar.HOUR_OF_DAY, range[0]);
-					Date start = calendar.getTime();
-					calendar.set(Calendar.HOUR_OF_DAY, range[1]);
-					if (range[0] > range[1]) {
-						calendar.add(Calendar.DATE, 1); // add 1 day if interval ends in the next day
+					for (Integer i = index; i < hourRanges.length; i++) {
+						Calendar calendar = Calendar.getInstance();
+						Integer[] range = hourRanges[index];
+						calendar.setTime(entry.getDate());
+						calendar.set(Calendar.MINUTE, 0);
+						calendar.set(Calendar.SECOND, 0);
+						calendar.set(Calendar.HOUR_OF_DAY, range[0]);
+						Date start = calendar.getTime();
+						calendar.set(Calendar.HOUR_OF_DAY, range[1]);
+						if (range[0] > range[1]) {
+							calendar.add(Calendar.DATE, 1); // add 1 day if interval ends in the next day
+						}
+						Date end = calendar.getTime();
+						if (entry.getDate().after(start) && entry.getDate().before(end)) {
+							entryPartitions[index].add(entry);
+							break;
+						}
+						else {
+							String avg = average(index);
+							if (avg != null)
+								this.outPipe.put(avg);
+							if (++index >= hourRanges.length) index = 0; //circularly increase index
+						}
 					}
-					Date end = calendar.getTime();
-					if (entry.getDate().after(start) && entry.getDate().before(end)) {
-						entryPartitions[index].add(entry);
-					}
-					else {
-						String avg = average(index);
-						if (avg != null)
-							this.outPipe.put(avg);
-					}
-					if (++index >= hourRanges.length) index = 0; //circularly increase index
+
 				}
 			} catch (PipeClosedException e) {
 				for (Integer i = 0; i < hourRanges.length; i++) {
